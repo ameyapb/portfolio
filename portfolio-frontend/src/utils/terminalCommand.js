@@ -1,5 +1,6 @@
 import { portfolioData, welcomeMessage } from '../data/portfolioData.js';
 
+// Available commands - like your API endpoints
 export const COMMANDS = {
   HELP: 'help',
   ABOUT: 'about',
@@ -9,10 +10,15 @@ export const COMMANDS = {
   EXPERIENCE: 'experience',
   CLEAR: 'clear',
   WHOAMI: 'whoami',
+  // Navigation commands
+  CV: 'cv',
+  RESUME: 'resume',
+  // Easter eggs
   MATRIX: 'matrix',
   HACK: 'hack'
 };
 
+// Command processor - like your main router
 export const processCommand = (input) => {
   const command = input.toLowerCase().trim();
 
@@ -38,6 +44,10 @@ export const processCommand = (input) => {
     case COMMANDS.WHOAMI:
       return getWhoAmIOutput();
 
+    case COMMANDS.CV:
+    case COMMANDS.RESUME:
+      return { type: 'navigate', target: 'about' };
+
     case COMMANDS.CLEAR:
       return { type: 'clear' };
 
@@ -52,6 +62,7 @@ export const processCommand = (input) => {
   }
 };
 
+// Command implementations - like your controller functions
 const getHelpOutput = () => {
   return {
     type: 'text',
@@ -65,6 +76,8 @@ const getHelpOutput = () => {
       "contact    - Get my contact information",
       "experience - View my work experience",
       "whoami     - Display current user info",
+      "cv         - Open full CV/resume page",
+      "resume     - Open full CV/resume page",
       "clear      - Clear the terminal",
       "",
       "Easter Eggs:",
@@ -186,6 +199,7 @@ const getWhoAmIOutput = () => {
   };
 };
 
+// Easter egg commands
 const getMatrixOutput = () => {
   return {
     type: 'text',
@@ -230,6 +244,7 @@ const getErrorOutput = (command) => {
   };
 };
 
+// Welcome message getter
 export const getWelcomeMessage = () => {
   return {
     type: 'text',

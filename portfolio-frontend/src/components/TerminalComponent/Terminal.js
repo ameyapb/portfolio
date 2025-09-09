@@ -2,15 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { processCommand, getWelcomeMessage } from '../../utils/terminalCommand';
 import './Terminal.css';
 
-const Terminal = () => {
+const Terminal = ({ onNavigateToAbout }) => {
+  // State management - like your server's memory
   const [history, setHistory] = useState([]); // Command history
   const [currentInput, setCurrentInput] = useState(''); // Current command being typed
   const [commandHistory, setCommandHistory] = useState([]); // For up/down arrow navigation
   const [historyIndex, setHistoryIndex] = useState(-1); // Current position in command history
 
+  // Refs for DOM manipulation
   const inputRef = useRef(null);
   const terminalRef = useRef(null);
 
+  // Initialize terminal with welcome message - like server startup
   useEffect(() => {
     const welcomeOutput = getWelcomeMessage();
     setHistory([{
@@ -19,36 +22,51 @@ const Terminal = () => {
       timestamp: new Date()
     }]);
 
+    // Focus on input when component mounts
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
 
+  // Auto-scroll to bottom when new content is added
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [history]);
 
+  // Handle command submission - like processing HTTP requests
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!currentInput.trim()) return;
 
+    // Add command to history
     const newCommand = {
       type: 'command',
       content: currentInput,
       timestamp: new Date()
     };
 
+    // Process the command - like calling your route handler
     const output = processCommand(currentInput);
 
+    // Handle special commands
     if (output.type === 'clear') {
       setHistory([]);
       setCurrentInput('');
       return;
     }
 
+    // Handle navigation commands
+    if (output.type === 'navigate' && output.target === 'about') {
+      if (onNavigateToAbout) {
+        onNavigateToAbout();
+      }
+      return;
+    }
+
+    // Add command and output to history
     const newOutput = {
       type: 'output',
       content: output.content,
@@ -58,11 +76,13 @@ const Terminal = () => {
 
     setHistory(prev => [...prev, newCommand, newOutput]);
 
+    // Update command history for navigation
     setCommandHistory(prev => [...prev, currentInput]);
     setHistoryIndex(-1);
     setCurrentInput('');
   };
 
+  // Handle keyboard navigation (up/down arrows for command history)
   const handleKeyDown = (e) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -84,12 +104,14 @@ const Terminal = () => {
     }
   };
 
+  // Keep focus on input - like keeping server alive
   const handleTerminalClick = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   };
 
+  // Render terminal prompt
   const renderPrompt = () => (
     <span className="terminal-prompt">
       <span className="user">user</span>
@@ -99,6 +121,7 @@ const Terminal = () => {
     </span>
   );
 
+  // Render history item
   const renderHistoryItem = (item, index) => {
     if (item.type === 'command') {
       return (

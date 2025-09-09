@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Terminal from './components/TerminalComponent/Terminal';
+import AboutView from './components/AboutView/AboutView';
 import './App.css';
 
 function App() {
+  // State to manage which view is currently active
+  const [currentView, setCurrentView] = useState('terminal'); // 'terminal' or 'about'
+
+  // Navigation handlers
+  const handleNavigateToAbout = () => {
+    setCurrentView('about');
+  };
+
+  const handleBackToTerminal = () => {
+    setCurrentView('terminal');
+  };
+
   return (
     <div className="App">
       {/* Background layer */}
@@ -25,16 +38,23 @@ function App() {
           </p>
         </header>
 
-        {/* Terminal component */}
-        <main className="terminal-section">
-          <Terminal />
+        {/* Conditional rendering based on current view */}
+        <main className="content-section">
+          {currentView === 'terminal' ? (
+            <Terminal onNavigateToAbout={handleNavigateToAbout} />
+          ) : (
+            <AboutView onBackToTerminal={handleBackToTerminal} />
+          )}
         </main>
 
         {/* Footer */}
         <footer className="app-footer">
           <p>
             <span className="footer-symbol">►</span>
-            Press any key to interact with the terminal
+            {currentView === 'terminal'
+              ? "Press any key to interact with the terminal"
+              : "Use the back button to return to terminal"
+            }
             <span className="footer-symbol">◄</span>
           </p>
         </footer>
