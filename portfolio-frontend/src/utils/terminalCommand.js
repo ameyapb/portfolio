@@ -15,7 +15,9 @@ export const COMMANDS = {
   RESUME: 'resume',
   // Easter eggs
   MATRIX: 'matrix',
-  HACK: 'hack'
+  HACK: 'hack',
+  COFFEE: 'coffee',
+  JOKE: 'joke'
 };
 
 // Command processor - like your main router
@@ -57,6 +59,12 @@ export const processCommand = (input) => {
     case COMMANDS.HACK:
       return getHackOutput();
 
+    case COMMANDS.COFFEE:
+      return getCoffeeOutput();
+
+    case COMMANDS.JOKE:
+      return getJokeOutput();
+
     default:
       return getErrorOutput(command);
   }
@@ -83,6 +91,8 @@ const getHelpOutput = () => {
       "Easter Eggs:",
       "matrix     - Enter the Matrix",
       "hack       - Initiate hacking sequence",
+      "coffee     - ☕ Get some fuel",
+      "joke       - Random developer joke",
       "",
       "Tip: Commands are case-insensitive"
     ]
@@ -230,6 +240,78 @@ const getHackOutput = () => {
       "Just kidding - this is a portfolio, not a real hack 😄",
       "",
       "But I can hack together some pretty cool backend systems!"
+    ]
+  };
+};
+
+const getCoffeeOutput = () => {
+  const coffeeArt = [
+    "      ( (",
+    "       ) )",
+    "    .......  ☕",
+    "    |     |]",
+    "    \\     /",
+    "     `---'",
+  ];
+
+  return {
+    type: 'text',
+    content: [
+      "Brewing coffee...",
+      "",
+      ...coffeeArt,
+      "",
+      "☕ Coffee is ready!",
+      "// TODO: Actually implement coffee dispensing feature",
+      "Error: CoffeeNotFoundException - Please manually acquire caffeine",
+      "",
+      "Fun fact: This developer runs on coffee and console.log() statements."
+    ]
+  };
+};
+
+const getJokeOutput = () => {
+  const jokes = [
+    [
+      "Why do programmers prefer dark mode?",
+      "Because light attracts bugs! 🐛"
+    ],
+    [
+      "How many programmers does it take to change a light bulb?",
+      "None. That's a hardware problem. 💡"
+    ],
+    [
+      "Why don't backend developers ever get lost?",
+      "Because they always know their way around the server! 🗺️"
+    ],
+    [
+      "What's the object-oriented way to become wealthy?",
+      "Inheritance! 💰"
+    ],
+    [
+      "Why do Java developers wear glasses?",
+      "Because they can't C#! 👓"
+    ],
+    [
+      "A SQL query goes into a bar, walks up to two tables...",
+      "and asks, 'Can I join you?' 🍺"
+    ]
+  ];
+
+  const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+
+  return {
+    type: 'text',
+    content: [
+      "Random Developer Joke:",
+      "═".repeat(25),
+      "",
+      randomJoke[0],
+      "",
+      randomJoke[1],
+      "",
+      "Ba dum tss! 🥁",
+      "Type 'joke' again for another one!"
     ]
   };
 };

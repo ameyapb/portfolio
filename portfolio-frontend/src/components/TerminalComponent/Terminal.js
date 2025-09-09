@@ -13,6 +13,16 @@ const Terminal = ({ onNavigateToAbout }) => {
   const inputRef = useRef(null);
   const terminalRef = useRef(null);
 
+  // Simple glitch effect function
+  const triggerGlitch = () => {
+    if (terminalRef.current) {
+      terminalRef.current.classList.add('glitch');
+      setTimeout(() => {
+        terminalRef.current.classList.remove('glitch');
+      }, 300);
+    }
+  };
+
   // Initialize terminal with welcome message - like server startup
   useEffect(() => {
     const welcomeOutput = getWelcomeMessage();
@@ -64,6 +74,12 @@ const Terminal = ({ onNavigateToAbout }) => {
         onNavigateToAbout();
       }
       return;
+    }
+
+    // Handle special effects for easter eggs
+    if (currentInput.toLowerCase() === 'matrix' || currentInput.toLowerCase() === 'hack') {
+      // Trigger glitch effect
+      triggerGlitch();
     }
 
     // Add command and output to history
