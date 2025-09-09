@@ -1,0 +1,161 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { processCommand, getWelcomeMessage } from '../../utils/terminalCommand';
+import './Terminal.css';
+
+const Terminal = () => {
+  const [history, setHistory] = useState([]); // Command history
+  const [currentInput, setCurrentInput] = useState(''); // Current command being typed
+  const [commandHistory, setCommandHistory] = useState([]); // For up/down arrow navigation
+  const [historyIndex, setHistoryIndex] = useState(-1); // Current position in command history
+
+  const inputRef = useRef(null);
+  const terminalRef = useRef(null);
+
+  useEffect(() => {
+    const welcomeOutput = getWelcomeMessage();
+    setHistory([{
+      type: 'output',
+      content: welcomeOutput.content,
+      timestamp: new Date()
+    }]);
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [history]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!currentInput.trim()) return;
+
+    const newCommand = {
+      type: 'command',
+      content: currentInput,
+      timestamp: new Date()
+    };
+
+    const output = processCommand(currentInput);
+
+    if (output.type === 'clear') {
+      setHistory([]);
+      setCurrentInput('');
+      return;
+    }
+
+    const newOutput = {
+      type: 'output',
+      content: output.content,
+      outputType: output.type,
+      timestamp: new Date()
+    };
+
+    setHistory(prev => [...prev, newCommand, newOutput]);
+
+    setCommandHistory(prev => [...prev, currentInput]);
+    setHistoryIndex(-1);
+    setCurrentInput('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+        const newIndex = historyIndex + 1;
+        setHistoryIndex(newIndex);
+        setCurrentInput(commandHistory[commandHistory.length - 1 - newIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        setHistoryIndex(newIndex);
+        setCurrentInput(commandHistory[commandHistory.length - 1 - newIndex]);
+      } else if (historyIndex === 0) {
+        setHistoryIndex(-1);
+        setCurrentInput('');
+      }
+    }
+  };
+
+  const handleTerminalClick = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const renderPrompt = () => (
+    <span className="terminal-prompt">
+      <span className="user">user</span>
+      <span className="at">@</span>
+      <span className="host">portfolio</span>
+      <span className="path">:~$</span>
+    </span>
+  );
+
+  const renderHistoryItem = (item, index) => {
+    if (item.type === 'command') {
+      return (
+        <div key={index} className="terminal-line command-line">
+          {renderPrompt()}
+          <span className="command-text">{item.content}</span>
+        </div>
+      );
+    } else {
+      return (
+        <div key={index} className={`terminal-line output-line ${item.outputType || ''}`}>
+          {item.content.map((line, lineIndex) => (
+            <div key={lineIndex} className="output-line-text">
+              {line}
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className="terminal-container" onClick={handleTerminalClick}>
+      <div className="terminal-header">
+        <div className="terminal-buttons">
+          <span className="terminal-button close"></span>
+          <span className="terminal-button minimize"></span>
+          <span className="terminal-button maximize"></span>
+        </div>
+        <div className="terminal-title">Portfolio Terminal v1.0</div>
+      </div>
+
+      <div className="terminal-body" ref={terminalRef}>
+        <div className="terminal-content">
+          {/* Render command history */}
+          {history.map((item, index) => renderHistoryItem(item, index))}
+
+          {/* Current input line */}
+          <form onSubmit={handleSubmit} className="terminal-input-form">
+            <div className="terminal-line input-line">
+              {renderPrompt()}
+              <input
+                ref={inputRef}
+                type="text"
+                value={currentInput}
+                onChange={(e) => setCurrentInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="terminal-input"
+                autoComplete="off"
+                autoFocus
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Terminal;

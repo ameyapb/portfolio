@@ -1,0 +1,283 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  min-height: 100vh;
+  background: #000000;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background layers */
+.background-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+/* Matrix rain effect */
+.matrix-rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 255, 65, 0.05) 0%, transparent 70%),
+    linear-gradient(90deg, transparent 50%, rgba(0, 255, 65, 0.02) 50%);
+  background-size:
+    100% 100%,
+    20px 20px;
+  animation: matrixScroll 20s linear infinite;
+}
+
+@keyframes matrixScroll {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 100vh, 20px 100vh;
+  }
+}
+
+/* Grid overlay */
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridPulse 4s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+/* Main content */
+.main-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* Header section */
+.app-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.header-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 100px;
+  background: radial-gradient(ellipse, rgba(0, 255, 65, 0.2) 0%, transparent 70%);
+  z-index: -1;
+  animation: headerPulse 3s ease-in-out infinite;
+}
+
+@keyframes headerPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.app-title {
+  font-size: 3rem;
+  margin: 20px 0;
+  text-shadow:
+    0 0 10px #00ff41,
+    0 0 20px #00ff41,
+    0 0 30px #00ff41;
+  animation: titleFlicker 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleFlicker {
+  0%, 90%, 100% {
+    text-shadow:
+      0 0 10px #00ff41,
+      0 0 20px #00ff41,
+      0 0 30px #00ff41;
+  }
+  95% {
+    text-shadow:
+      0 0 5px #00ff41,
+      0 0 10px #00ff41,
+      0 0 15px #00ff41;
+  }
+}
+
+.title-bracket {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.title-text {
+  color: #00ff41;
+  margin: 0 10px;
+}
+
+.app-subtitle {
+  font-size: 1.1rem;
+  color: #cccccc;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  animation: subtitleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes subtitleGlow {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Terminal section */
+.terminal-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 600px;
+  margin: 20px 0;
+}
+
+/* Footer section */
+.app-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.app-footer p {
+  color: #888888;
+  font-size: 0.9rem;
+  animation: footerBlink 2s ease-in-out infinite;
+}
+
+.footer-symbol {
+  color: #00ff41;
+  margin: 0 10px;
+  text-shadow: 0 0 5px #00ff41;
+}
+
+@keyframes footerBlink {
+  0%, 90%, 100% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.6;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+
+  .app-title {
+    font-size: 2rem;
+  }
+
+  .app-subtitle {
+    font-size: 1rem;
+  }
+
+  .terminal-section {
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .app-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+}
+
+/* Loading animation for when components mount */
+.main-content {
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sci-fi accent elements */
+.app-header::before,
+.app-header::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ff41, transparent);
+  top: 0;
+  animation: scanLine 3s ease-in-out infinite;
+}
+
+.app-header::before {
+  left: 20%;
+}
+
+.app-header::after {
+  right: 20%;
+}
+
+@keyframes scanLine {
+  0%, 100% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
