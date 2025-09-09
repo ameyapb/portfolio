@@ -1,8 +1,9 @@
 import { portfolioData, welcomeMessage } from '../data/portfolioData.js';
 
-// Available commands - like your API endpoints
+// Available commands
 export const COMMANDS = {
   HELP: 'help',
+  LS: 'ls',
   ABOUT: 'about',
   SKILLS: 'skills',
   PROJECTS: 'projects',
@@ -20,13 +21,16 @@ export const COMMANDS = {
   JOKE: 'joke'
 };
 
-// Command processor - like your main router
+// Command processor
 export const processCommand = (input) => {
   const command = input.toLowerCase().trim();
 
   switch (command) {
     case COMMANDS.HELP:
       return getHelpOutput();
+
+    case COMMANDS.LS:
+      return getLsOutput();
 
     case COMMANDS.ABOUT:
       return getAboutOutput();
@@ -70,7 +74,7 @@ export const processCommand = (input) => {
   }
 };
 
-// Command implementations - like your controller functions
+// Command implementations
 const getHelpOutput = () => {
   return {
     type: 'text',
@@ -98,6 +102,8 @@ const getHelpOutput = () => {
     ]
   };
 };
+
+const getLsOutput = getHelpOutput
 
 const getAboutOutput = () => {
   return {
